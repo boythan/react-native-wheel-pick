@@ -40,14 +40,24 @@ class WheelCurvedPicker extends PureComponent {
   state = {}
 
   onValueChange = ({ nativeEvent: { data } }) => {
-    if(firstTimeOnChange) {
+    if (firstTimeOnChange) {
       return firstTimeOnChange = false
     }
-    this.props.onValueChange(data); 
+    this.props.onValueChange(data);
   }
 
   componentDidMount() {
     this.setState(stateFromProps(this.props));
+  }
+
+  componentWillReceiveProps(newsProps) {
+    if (newsProps.children && this.props.children && !this.compareTwoArrays(newsProps.children, this.props.children)) {
+      this.setState(stateFromProps(newsProps));
+    }
+  }
+
+  compareTwoArrays(array1, array2) {
+    return array1.length === array2.length && array1.every((value, index) => value === array2[index])
   }
 
   static getDerivedStateFromProps(nextProps) {
